@@ -33,7 +33,7 @@ const displayCalculator = () => {
     key = document.createElement("div");
     key.classList.add("key");
     key.innerHTML = "C";
-    key.setAttribute("key", "C");
+    key.setAttribute("key", "Backspace");
     row.append(key);
     calculator.append(row);
 
@@ -124,7 +124,7 @@ const displayCalculator = () => {
     key = document.createElement("div");
     key.classList.add("key");
     key.innerHTML = "=";
-    key.setAttribute("key", "=");
+    key.setAttribute("key", "Enter");
     row.append(key);
     key = document.createElement("div");
     key.classList.add("key");
@@ -148,9 +148,9 @@ displayCalculator();
 const keys = document.querySelectorAll(".key");
 const display = document.querySelector(".display");
 const historyUl = document.querySelector("ul");
+const historyContainer = document.getElementById("history");
 
 const addToHistory = (str) => {
-    const historyContainer = document.getElementById("history");
     historyContainer.style.visibility = "visible";
     const historyLi = document.createElement("li");
     historyLi.innerHTML = str;
@@ -170,18 +170,33 @@ const calculate = () => {
     return completeOp;
 };
 
+const isEmpty = (str) => {
+    return str == "";
+};
+
+const lightUpArea = (area) => {
+    area.style.backgroundColor = "orangered";
+    setTimeout(() => {
+        area.style.backgroundColor = "#303030";
+    }, 200);
+};
+
 for(const key of keys) {
     key.addEventListener("click", (e) => {
         const pressedButton = e.target.getAttribute("key");
+        const pressedArea = e.target;
 
-        if(pressedButton === "C") {
+        if(pressedButton === "Backspace") {
             display.innerHTML = "";
-        } else if(pressedButton === "=" && display.innerHTML != "") {
+        } else if(pressedButton === "Enter" && !isEmpty(display.innerHTML)) {
             const calculation = calculate();
             addToHistory(calculation);
             } else {
-            display.innerHTML += pressedButton;
-        }
+                if(pressedButton !== "Enter") {
+                    lightUpArea(pressedArea);
+                    display.innerHTML += pressedButton;    
+                }
+            }
     });
 }
 
@@ -191,14 +206,16 @@ const isValidKey = (key) => {
 
 body.addEventListener("keyup", (e) => {
     const pressedKey = e.key;
+    const pressedArea = document.querySelector(`[key="${pressedKey}"]`);
 
     if(pressedKey === "Backspace") {
         display.innerHTML = "";
-    } else if(pressedKey === "Enter" && display.innerHTML != "") {
+    } else if(pressedKey === "Enter" && !isEmpty(display.innerHTML)) {
         const calculation = calculate();
         addToHistory(calculation);
     } else {
         if(isValidKey(pressedKey)) {
+            lightUpArea(pressedArea);
             display.innerHTML += pressedKey;
         }
     }
