@@ -1,4 +1,6 @@
 const main = document.querySelector("main");
+const body = document.body;
+const validKeys = ["(", ")", "%", "Backspace", "7", "8", "9", "/", "4", "5", "6", "*", "1", "2", "3", "-", "0", ".", "=", "+"];
 
 const displayCalculator = () => {
     const calculator = document.createElement("div");
@@ -148,6 +150,8 @@ const display = document.querySelector(".display");
 const historyUl = document.querySelector("ul");
 
 const addToHistory = (str) => {
+    const historyContainer = document.getElementById("history");
+    historyContainer.style.visibility = "visible";
     const historyLi = document.createElement("li");
     historyLi.innerHTML = str;
     historyUl.append(historyLi);
@@ -157,29 +161,45 @@ const computeResult = (str) => {
     return Function('return ' + str)();
 };
 
-const isValidKey = (key) => {
-    return;
-}
+const calculate = () => {
+    const operation = display.innerHTML;
+    let completeOp = operation;
+    completeOp += ` = ${computeResult(operation)}`;
+    display.innerHTML = "";
+
+    return completeOp;
+};
 
 for(const key of keys) {
     key.addEventListener("click", (e) => {
-        const pressedKey = e.target.getAttribute("key");
+        const pressedButton = e.target.getAttribute("key");
 
-        if(pressedKey) {
-            if(pressedKey === "C") {
-                display.innerHTML = "";
-            } else if(pressedKey === "=" && display.innerHTML != "") {
-                let completeOp;
-                const operation = display.innerHTML;
-                completeOp = operation;
-                completeOp += ` = ${computeResult(operation)}`;
-                display.innerHTML = "";
-                const historyContainer = document.getElementById("history");
-                historyContainer.style.visibility = "visible";
-                addToHistory(completeOp);
+        if(pressedButton === "C") {
+            display.innerHTML = "";
+        } else if(pressedButton === "=" && display.innerHTML != "") {
+            const calculation = calculate();
+            addToHistory(calculation);
             } else {
-                display.innerHTML += pressedKey;
-            }
+            display.innerHTML += pressedButton;
         }
     });
 }
+
+const isValidKey = (key) => {
+    return validKeys.includes(key);
+};
+
+body.addEventListener("keyup", (e) => {
+    const pressedKey = e.key;
+
+    if(pressedKey === "Backspace") {
+        display.innerHTML = "";
+    } else if(pressedKey === "Enter" && display.innerHTML != "") {
+        const calculation = calculate();
+        addToHistory(calculation);
+    } else {
+        if(isValidKey(pressedKey)) {
+            display.innerHTML += pressedKey;
+        }
+    }
+});
