@@ -79,7 +79,7 @@ const displayCalculator = () => {
     key = document.createElement("div");
     key.classList.add("key");
     key.innerHTML = "X";
-    key.setAttribute("key", "X");
+    key.setAttribute("key", "*");
     row.append(key);
     calculator.append(row);
 
@@ -135,10 +135,10 @@ const displayCalculator = () => {
     historyContainer.id = "history";
     const historyTitle = document.createElement("h3");
     historyTitle.innerHTML = "Historique";
-    const ul = document.createElement("ul");
-    historyContainer.append(historyTitle, ul);
+    const historyUl = document.createElement("ul");
+    historyContainer.append(historyTitle, historyUl);
 
-    main.append(calculator);
+    main.append(calculator, historyContainer);
 };
 
 displayCalculator();
@@ -148,7 +148,9 @@ const display = document.querySelector(".display");
 const historyUl = document.querySelector("ul");
 
 const addToHistory = (str) => {
-    console.log(str);
+    const historyLi = document.createElement("li");
+    historyLi.innerHTML = str;
+    historyUl.append(historyLi);
 };
 
 const computeResult = (str) => {
@@ -172,6 +174,8 @@ for(const key of keys) {
                 completeOp = operation;
                 completeOp += ` = ${computeResult(operation)}`;
                 display.innerHTML = "";
+                const historyContainer = document.getElementById("history");
+                historyContainer.style.visibility = "visible";
                 addToHistory(completeOp);
             } else {
                 display.innerHTML += pressedKey;
