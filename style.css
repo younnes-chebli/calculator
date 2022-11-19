@@ -19,3 +19,32 @@ footer {
     margin-top: auto;
     border-top: 3px solid white;
 }
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid white;
+}
+
+.display {
+    text-align: right;
+    padding: 1rem;
+    border: 1px solid white;
+    font-weight: bold;
+}
+
+.row {
+    display: flex;
+    border: 1px solid white;
+}
+
+.row * {
+    width: 25%;
+    text-align: center;
+    padding: 1rem;
+    border: 1px solid white;
+}
+
+#history {
+    visibility: hidden;
+}
